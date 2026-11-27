@@ -48,3 +48,25 @@ Example - a sales person wants to approach stripe, Instead of manually searching
 3. Open AI
 4. Fast API
 5. HTML/CSS/JS
+
+## How does it work
+
+```
+Users enters a company name (stripe)
+        |
+        Fast API Backend
+        |
+        Langgraph supervisor
+        |
+        Web research agent ------ Treg
+        |
+        Company intelligence ----- Treg
+        |
+        People research agent ----- Treg
+        |
+        Report writer agent ----- LLM
+        | 
+        Validation & Final report
+        |
+        User interface
+```
