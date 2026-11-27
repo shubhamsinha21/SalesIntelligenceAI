@@ -16,5 +16,15 @@ def safe_url(url):
     except (ValueError, TypeError):
         return False
     
-
+def public_data(value):
+    """Remove common contact fields before passing evidence to the model"""
+    if isinstance(value, dict):
+        return {k: public_data(v) for k,v in value.items if not any(s in k.lower() for s in ('email', 'phone', 'mobile', 'address', 'contact', 'password', 'token'))}
+    
+    if isinstance(value, list):
+        return [public_data(v) for v in value[:15]]
+    
+    if isinstance(value, str):
+        return re.sub(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}', '[redacted]', value)[:10000]
+    return value
 
