@@ -81,3 +81,11 @@ Users enters a company name (stripe)
 - Without tregm we might need separate accounts, API keys and integrations for web search, website scrapping and people search.
 
 - With treg, we can access with just one api key.
+
+## Files and structure 
+- main.py -> endpoints
+- static -> script and css files
+- templates -> index file
+- graph.py 
+- guardrails
+- treg
