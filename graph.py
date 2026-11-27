@@ -94,6 +94,24 @@ def run_research(name, demo=True):
         except Exception as exc:
             return finish(state,'people',warning='People lookup failed: '+(str(exc) if isinstance(exc,RuntimeError) else type(exc).__name__))
         
+    def writer(state):
+        if demo:
+            report = f'# {name} — DEMO ONLY\n\nExample software business [1]. Example technology sector [2]. Example decision-maker roles: CEO and Head of Sales [3].\n\n**Sales hypothesis:** explore workflow automation. This is fictional sample data, not live research.'
+        elif not state['evidence']:
+            report = 'No reliable evidence retrieved. No research brief generated.'
+            
+        else:
+            try:
+                report = ask('Write a concise sales research brief with sections Company overview, Products and news, Key people, Sales hypotheses, and Limitations. Cite every factual claim using evidence IDs like [1]. Only include professional names and roles supported by evidence; flag unverified employment. Do not output contact details or URLs; source list is appended by code. Clearly label hypotheses. Say unknown for missing data.',state)
+                ids = {str(row['id']) for row in state['evidence']}
+                used = set(re.findall(r'\[(\d+)\]', report))
+                if not used or not used <=ids:
+                    raise RuntimeError('Citation validation failed')
+                if re.search(r'https?://|[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}',report):
+                    raise RuntimeError('Unexpected URL or contact detail in report')
+            except Exception:
+                return finish(state,'writer', warning='Report generation or citation validation failed; inspect evidence.', report='No validated report available.')
+            return finish(state, 'writer', report=report)
         
     
     
