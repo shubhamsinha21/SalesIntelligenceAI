@@ -70,3 +70,14 @@ Users enters a company name (stripe)
         |
         User interface
 ```
+
+## What is Treg ?
+- An AI model can understand info and generate text. However, it needs external tools to collect up-to-date info from the internet.
+
+- Treg enters here..
+
+- Treg acts as a unified gateway bet our agents and external data providers.
+
+- Without tregm we might need separate accounts, API keys and integrations for web search, website scrapping and people search.
+
+- With treg, we can access with just one api key.
