@@ -70,6 +70,18 @@ def run_research(name, demo=True):
               
         except Exception as exc:
             warnings.append(f'Web research imcomplete: {type(exc).__name__ }: '+ (str(exc) if isinstance(exc, RuntimeError) else 'check configuration'))
-        return {'evidence': rows, 'warnings': warnings, 'completed': state['completed']+['web'], 'website':website}
+        return {'evidence': rows, 'warnings': warnings, 'completed': state['completed']+['web'], 'website': website}
+    
+    def company(state):
+        if demo:
+            return finish(state, 'company', {'source': 'Offine fictional fixture', 'data': {'industry': 'Example technology services'}})
+        if not state['websites']:
+            return finish(state,'company',warning='Company enrichment skipped: missing domain.')
+        try:
+            domain = urlsplit(state['website']).hostname.removeprefix('www.')
+            return finish(state,'company',{'source':'Treg company research: '+domain,'data':public_data(treg.company(domain))})
+        except Exception as exc:
+            return finish(state, 'company', warning='Company enrichment failed: '+(str(exc) if isinstance(exc, RuntimeError) else type(exc).__name__))
+        
     
     
