@@ -83,5 +83,17 @@ def run_research(name, demo=True):
         except Exception as exc:
             return finish(state, 'company', warning='Company enrichment failed: '+(str(exc) if isinstance(exc, RuntimeError) else type(exc).__name__))
         
+    def people(state):
+        if demo:
+            return finish(state,'people',{'source':'Offline fictional fixture','data':[{'role':'Example CEO'},{'role':'Example Head of Sales'}]})
+        if not state['website']:
+            return finish(state,'people',warning='People lookup skipped: missing domain.')
+        try:
+            domain = urlsplit(state['website']).hostname.removeprefix('www.')
+            return finish(state,'people',{'source':'Treg people search: '+domain,'data':public_data(treg.people(domain))})
+        except Exception as exc:
+            return finish(state,'people',warning='People lookup failed: '+(str(exc) if isinstance(exc,RuntimeError) else type(exc).__name__))
+        
+        
     
     
