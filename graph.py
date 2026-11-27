@@ -47,5 +47,29 @@ def run_research(name, demo=True):
                 return {'next':task}
         return {'next':'end'}
     
-        
+    def web(state):
+        if demo:
+            return finish(state, 'web', {'source':'Offline fictional fixture', 'data':{'description':'Example software business; not a factual finding.'}}, website='')  
+        rows = list(state['evidence'])
+        warnings = list(state['warnings'])
+        website = ''
+        try:
+            data = public_data(treg.search(f"{name} official website company products recent news"))
+            rows.append({'id': len(rows) + 1, 'source': 'Treg web search', 'data':data})
+            candidate = ask('Return only the officially company HTTPS homepage URL from the search evidence, or NONE if ambigous.', {'company':name, 'search':data}).strip()
+            
+            # only scrape a URL whose host appears in the actual search results.
+            
+            if safe_url(candidate) and urlsplit(candidate).hostname in json.dumps(data):
+                website = candidate
+                page = public_data(treg.scrape(website))
+                rows.append({'id': len(rows) + 1, 'source': website, 'data': page})
+                
+            else:
+                warnings.append('Official domain could not be resolved; enrichment skipped.')
+              
+        except Exception as exc:
+            warnings.append(f'Web research imcomplete: {type(exc).__name__ }: '+ (str(exc) if isinstance(exc, RuntimeError) else 'check configuration'))
+        return {'evidence': rows, 'warnings': warnings, 'completed': state['completed']+['web'], 'website':website}
+    
     
