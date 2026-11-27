@@ -41,6 +41,11 @@ def run_research(name, demo=True):
         return {'evidence':rows, 'completed':state['completed']+[task],
                 'warnings':state['warnings']+ ([warning] if warning else []), **extra}
         
+    def supervisor(state):
+        for task in ('web', 'company', 'people', 'writer'):
+            if task not in state['completed']:
+                return {'next':task}
+        return {'next':'end'}
     
         
     
